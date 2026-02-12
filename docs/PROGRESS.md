@@ -19,7 +19,7 @@
 | Настройка NextAuth.js v5 (credentials provider) | ✅ | JWT стратегия, bcrypt, user.id в сессии |
 | Middleware защиты роутов (main)/ | ✅ | Публичные: /login, /invite, /api/auth. Предупреждение: middleware deprecated в Next 16, но работает |
 | Базовый layout + навигация (sidebar desktop / tabs mobile) | ✅ | Sidebar 240px, MobileNav 64px, responsive |
-| Подключение Google Fonts (Cormorant, Crimson Pro, Caveat, Alegreya Sans) | ✅ | ⚠️ Crimson Pro не поддерживает кириллицу — fallback на Georgia. Рассмотреть PT Serif/Noto Serif |
+| Подключение Google Fonts (Cormorant, PT Serif, Caveat, Alegreya Sans) | ✅ | Crimson Pro заменён на PT Serif (кириллица). Alegreya Sans вес 600→700 |
 | Глобальные стили (grain overlay, paper texture, candle glow) | ✅ | Все текстуры и анимации из дизайн-дока |
 | Placeholder страницы (6 шт) | ✅ | Dashboard, Timeline, Notes, Playlist, Settings, Login |
 | Код-ревью + билд | ✅ | npm run build проходит, 3 бага найдено и исправлено |
@@ -34,16 +34,18 @@
 ---
 
 ### Фаза 2: Аутентификация
-**Статус:** ⬜ Не начата
+**Статус:** ✅ Завершена
 
 | Задача | Статус | Заметки |
 |--------|--------|---------|
-| Страница логина (/login) | ⬜ | Тёмная тема, candle-glow |
-| Страница инвайта (/invite/[token]) | ⬜ | Персональное приветствие |
-| Server Action: регистрация первого пользователя (seed) | ⬜ | Сабыржан = user1 |
-| Server Action: регистрация по инвайту | ⬜ | Аида = user2 |
-| Защита роутов middleware | ⬜ | |
-| Инвайт-токен (генерация, валидация, одноразовость) | ⬜ | |
+| Страница логина (/login) | ✅ | Тёмная тема, candle-glow, staggered анимации, Suspense для searchParams |
+| Страница инвайта (/invite/[token]) | ✅ | Server + Client component, персональное приветствие с именем user1 |
+| Страница первой настройки (/setup) | ✅ | Одноразовая, проверяет наличие пользователей, force-dynamic |
+| Server Actions (auth.ts) | ✅ | setupFirstUser, registerWithInvite, generateInviteToken — с типами возврата |
+| UI компоненты (Logo, Input, Button) | ✅ | Переиспользуемые, 3 варианта Button (primary/secondary/ghost) |
+| Защита роутов middleware | ✅ | /login, /invite, /setup — публичные; остальное защищено |
+| Инвайт-токен (генерация, валидация, одноразовость) | ✅ | UUID v4, обнуляется после использования |
+| Код-ревью + билд | ✅ | 2 бага исправлено, npm run build проходит |
 
 ---
 
@@ -172,7 +174,7 @@ R2_ENDPOINT=https://your-account-id.r2.cloudflarestorage.com
 - Код-ревью: 3 бага найдено и исправлено (шрифты), билд проходит
 
 **Известные замечания:**
-- Crimson Pro (body шрифт) не поддерживает кириллицу — русский текст рендерится через Georgia. Рассмотреть замену на PT Serif или Noto Serif
+- ~~Crimson Pro заменён на PT Serif (исправлено в этой сессии)~~
 - Next.js 16 предупреждает о deprecated middleware.ts (работает, но в будущем мигрировать на proxy)
 - Alegreya Sans: вес 600 не существует, заменён на 700
 
@@ -201,4 +203,30 @@ src/types/next-auth.d.ts                     # NextAuth type augmentation
 prisma/schema.prisma                         # Database schema
 prisma.config.ts                             # Prisma 7 datasource config
 tsconfig.json, next.config.ts, postcss.config.mjs, .gitignore, .env.example
+```
+
+### Сессия 1 (продолжение) — Фаза 2
+**Цель:** Аутентификация — логин, инвайт, первичная настройка
+**Что сделано:**
+- Заменён шрифт Crimson Pro → PT Serif (поддержка кириллицы)
+- Обновлены docs/plans с заметками о смене шрифтов
+- UI компоненты: Logo (3 размера), Input (forwardRef, label), Button (3 варианта, loading)
+- Страница логина (/login): signIn + callbackUrl + Suspense
+- Страница инвайта (/invite/[token]): валидация токена, приветствие с именем, регистрация Аиды
+- Страница первой настройки (/setup): одноразовая, создаёт Сабыржана + Couple
+- Server Actions: setupFirstUser, registerWithInvite, generateInviteToken
+- Middleware обновлён: /setup добавлен в публичные роуты
+- Код-ревью: 2 бага исправлено (TS типы + force-dynamic), билд проходит
+
+**Новые файлы:**
+```
+src/components/ui/Logo.tsx                    # Логотип "Our Space" с ♡
+src/components/ui/Input.tsx                   # Стилизованный инпут
+src/components/ui/Button.tsx                  # Кнопка (primary/secondary/ghost)
+src/app/(auth)/login/page.tsx                 # Страница логина (полный дизайн)
+src/app/(auth)/invite/[token]/page.tsx        # Инвайт — серверная валидация
+src/app/(auth)/invite/[token]/InviteForm.tsx  # Инвайт — форма регистрации
+src/app/(auth)/setup/page.tsx                 # Первичная настройка — сервер
+src/app/(auth)/setup/SetupForm.tsx            # Первичная настройка — форма
+src/actions/auth.ts                           # Server Actions аутентификации
 ```

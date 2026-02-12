@@ -5,7 +5,7 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
 
   // Public routes that don't need auth
-  const publicRoutes = ["/login", "/invite"];
+  const publicRoutes = ["/login", "/invite", "/setup"];
   const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
   const isAuthApi = pathname.startsWith("/api/auth");
 

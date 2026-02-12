@@ -1,16 +1,15 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Logo } from "@/components/ui/Logo";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { setupFirstUser } from "@/actions/auth";
 
-function LoginForm() {
+export function SetupForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,19 +22,26 @@ function LoginForm() {
     setLoading(true);
 
     try {
-      const result = await signIn("credentials", {
+      const result = await setupFirstUser(email, password);
+
+      if ("error" in result) {
+        setError(result.error);
+        return;
+      }
+
+      const signInResult = await signIn("credentials", {
         email,
         password,
         redirect: false,
       });
 
-      if (result?.error) {
-        setError("Неверный email или пароль");
-      } else if (result?.ok) {
-        router.push(callbackUrl || "/");
+      if (signInResult?.ok) {
+        router.push("/");
+      } else {
+        setError("Аккаунт создан, но не удалось войти. Попробуйте на странице входа.");
       }
     } catch {
-      setError("Неверный email или пароль");
+      setError("Произошла ошибка. Попробуйте ещё раз.");
     } finally {
       setLoading(false);
     }
@@ -47,8 +53,17 @@ function LoginForm() {
         <Logo size="lg" />
       </div>
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-        <div className="stagger-2">
+      <div className="stagger-2 mt-6 text-center">
+        <h2 className="font-display text-display-sm text-text-cream">
+          Создание аккаунта
+        </h2>
+        <p className="font-body text-body-sm text-text-muted-light mt-2">
+          Привет, Сабыржан! Создай аккаунт для нашего пространства
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+        <div className="stagger-3">
           <Input
             id="email"
             label="Email"
@@ -61,37 +76,29 @@ function LoginForm() {
           />
         </div>
 
-        <div className="stagger-3">
+        <div className="stagger-4">
           <Input
             id="password"
             label="Пароль"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Введите пароль"
+            placeholder="Придумайте пароль"
             required
-            autoComplete="current-password"
+            autoComplete="new-password"
           />
         </div>
 
         {error && (
-          <p className="stagger-4 text-accent-rose text-body-sm">{error}</p>
+          <p className="text-accent-rose text-body-sm">{error}</p>
         )}
 
-        <div className={error ? "stagger-5" : "stagger-4"}>
+        <div className="stagger-5">
           <Button type="submit" fullWidth loading={loading}>
-            Войти
+            Создать
           </Button>
         </div>
       </form>
     </div>
-  );
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense>
-      <LoginForm />
-    </Suspense>
   );
 }

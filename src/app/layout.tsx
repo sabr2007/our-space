@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import {
   Cormorant_Garamond,
-  Crimson_Pro,
+  PT_Serif,
   Caveat,
   Alegreya_Sans,
 } from "next/font/google";
@@ -14,9 +14,9 @@ const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
 });
 
-const crimson = Crimson_Pro({
-  subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600"],
+const ptSerif = PT_Serif({
+  subsets: ["cyrillic", "latin"],
+  weight: ["400", "700"],
   variable: "--font-crimson",
 });
 
@@ -45,7 +45,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body
-        className={`${cormorant.variable} ${crimson.variable} ${caveat.variable} ${alegreya.variable} bg-bg-primary text-text-cream font-body grain-overlay antialiased`}
+        className={`${cormorant.variable} ${ptSerif.variable} ${caveat.variable} ${alegreya.variable} bg-bg-primary text-text-cream font-body grain-overlay antialiased`}
       >
         <Providers>{children}</Providers>
       </body>

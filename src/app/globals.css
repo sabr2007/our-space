@@ -3,7 +3,7 @@
 @theme {
   /* Font families - set via CSS variables from next/font */
   --font-display: var(--font-cormorant), Georgia, serif;
-  --font-body: var(--font-crimson), Georgia, serif;
+  --font-body: var(--font-crimson), "PT Serif", Georgia, serif;
   --font-hand: var(--font-caveat), cursive;
   --font-ui: var(--font-alegreya), system-ui, sans-serif;
 
