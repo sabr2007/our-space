@@ -87,15 +87,17 @@
 ---
 
 ### Фаза 5: Записки
-**Статус:** ⬜ Не начата
+**Статус:** ✅ Завершена
 
 | Задача | Статус | Заметки |
 |--------|--------|---------|
-| Форма написания записки (notebook-style textarea) | ⬜ | |
-| Список записок (отправленные/полученные табы) | ⬜ | |
-| Открытая записка (letter-style) | ⬜ | |
-| Пометка прочитанной при открытии | ⬜ | |
-| Бейдж непрочитанных (pulse animation) | ⬜ | |
+| Server Actions (getNotes, createNote, markNoteAsRead) | ✅ | Auth + couple + partner lookup, revalidatePath, try/catch |
+| Форма написания записки (notebook-style textarea) | ✅ | NoteComposer модал, notebook-lines, 5000 символов, защита от закрытия при отправке |
+| Список записок (отправленные/полученные табы) | ✅ | NotesList: табы с gold underline, бейдж непрочитанных, staggered noteUnfold |
+| Открытая записка (letter-style) | ✅ | NoteView: paper-texture, подпись Caveat "С любовью", noteUnfold анимация |
+| Пометка прочитанной при открытии | ✅ | markNoteAsRead fire-and-forget, markedRef для StrictMode |
+| Бейдж непрочитанных (pulse animation) | ✅ | Счётчик на табе "Полученные", gold border на карточках |
+| Код-ревью + билд | ✅ | 0 critical, 3 medium, 5 low — 3 исправлено, npm run build проходит |
 
 ---
 
@@ -303,4 +305,31 @@ src/components/timeline/AddMomentModal.tsx         # Модальное окно
 src/components/timeline/TimelineView.tsx           # Основной клиент-компонент таймлайна
 src/app/(main)/timeline/page.tsx                  # Страница таймлайна (обновлена из placeholder)
 src/app/globals.css                               # Timeline CSS additions
+```
+
+### Сессия 4 — 2026-02-13
+**Цель:** Фаза 5 — Записки
+**Что сделано:**
+- Реализована полная функциональность записок: написание, отправка, чтение, пометка прочитанных
+- Server actions: getNotes (sent + received), createNote (с валидацией), markNoteAsRead (с проверкой ownership)
+- NoteComposer: модал с notebook-lines textarea, 5000 символов, защита от закрытия при отправке
+- NotesList: табы Полученные/Отправленные с gold underline, бейдж непрочитанных, staggered noteUnfold анимация
+- NoteView: letter-style карточка с paper-texture, подпись Caveat "С любовью, {имя}", noteUnfold анимация
+- Автопометка прочитанной при открытии (fire-and-forget, markedRef для StrictMode)
+- Empty states с разными сообщениями для каждого таба
+- Код-ревью командой: 0 critical, 3 medium, 5 low issues — 3 исправлено (unreadCount, close-while-loading, CSS class)
+
+**Исправленные баги (по результатам ревью):**
+1. NotesList: двойной вызов received.filter() заменён на вычисленный unreadCount
+2. NoteComposer: добавлена защита от закрытия модала во время отправки (if loading return)
+3. NoteView: inline style animation заменён на CSS класс .note-card-enter
+
+**Новые файлы:**
+```
+src/actions/notes.ts                              # Server Actions записок
+src/components/notes/NoteComposer.tsx             # Модал написания записки
+src/components/notes/NoteView.tsx                 # Letter-style просмотр записки
+src/components/notes/NotesList.tsx                # Список записок с табами
+src/app/(main)/notes/page.tsx                     # Страница записок (обновлена из placeholder)
+src/app/globals.css                               # Notes CSS additions (.note-card-enter, .badge-unread)
 ```

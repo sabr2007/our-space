@@ -377,3 +377,15 @@ body {
 .modal-enter {
   animation: modalFadeIn 300ms var(--ease-smooth) both;
 }
+
+/* =========================================================================
+   Notes
+   ========================================================================= */
+
+.note-card-enter {
+  animation: noteUnfold 400ms var(--ease-smooth) both;
+}
+
+.badge-unread {
+  animation: unreadPulse 2s ease-in-out infinite;
+}
