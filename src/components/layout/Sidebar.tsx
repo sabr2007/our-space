@@ -12,8 +12,18 @@ const navItems = [
   { href: "/settings", label: "Настройки", icon: Settings },
 ];
 
-export default function Sidebar() {
+interface SidebarProps {
+  user?: {
+    name: string;
+    avatar: string | null;
+    mood: { emoji: string } | null;
+  };
+}
+
+export default function Sidebar({ user }: SidebarProps) {
   const pathname = usePathname();
+
+  const initial = user?.name ? user.name.charAt(0).toUpperCase() : "?";
 
   return (
     <aside className="w-60 min-h-screen bg-bg-secondary border-r border-border-dark flex flex-col">
@@ -61,12 +71,25 @@ export default function Sidebar() {
       {/* User area */}
       <div className="px-4 py-5 border-t border-border-dark">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-bg-elevated border-2 border-border-dark flex items-center justify-center text-text-muted-light font-ui text-sm">
-            ?
-          </div>
+          {user?.avatar ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={user.avatar}
+              alt={user.name}
+              className="w-10 h-10 rounded-full border-2 border-border-dark object-cover"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-bg-elevated border-2 border-border-dark flex items-center justify-center text-text-muted-light font-ui text-sm">
+              {initial}
+            </div>
+          )}
           <div className="flex flex-col">
-            <span className="font-ui text-sm text-text-cream">Пользователь</span>
-            <span className="text-xs text-text-muted-light">настроение...</span>
+            <span className="font-ui text-sm text-text-cream">
+              {user?.name ?? "Пользователь"}
+            </span>
+            <span className="text-xs text-text-muted-light">
+              {user?.mood?.emoji ?? "настроение..."}
+            </span>
           </div>
         </div>
       </div>

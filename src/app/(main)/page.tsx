@@ -24,7 +24,7 @@ export default async function DashboardPage() {
     );
   }
 
-  const { partner, partnerMood, myMood, unreadNoteCount, recentPhotos, coupleStartDate } =
+  const { partner, partnerMood, myMood, unreadNoteCount, recentPhotos, coupleStartDate, moodPresets } =
     result.data;
 
   return (
@@ -48,6 +48,7 @@ export default async function DashboardPage() {
           partnerId={partner.id}
           initialPartnerMood={partnerMood}
           currentUserMood={myMood ? { emoji: myMood.emoji, label: myMood.label } : null}
+          moodPresets={moodPresets}
         />
       </div>
 

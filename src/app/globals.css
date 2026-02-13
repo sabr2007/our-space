@@ -408,3 +408,22 @@ body {
 .song-card-enter {
   animation: songCardSlide 400ms var(--ease-smooth) both;
 }
+
+/* =========================================================================
+   Settings
+   ========================================================================= */
+
+@keyframes settingsCardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.settings-card-enter {
+  animation: settingsCardEnter 400ms var(--ease-smooth) both;
+}

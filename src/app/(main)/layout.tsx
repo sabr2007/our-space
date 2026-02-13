@@ -1,16 +1,47 @@
 import Sidebar from "@/components/layout/Sidebar";
 import MobileNav from "@/components/layout/MobileNav";
+import { auth } from "@/lib/auth";
+import { db } from "@/lib/db";
 
-export default function MainLayout({
+export default async function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  let user: { name: string; avatar: string | null; mood: { emoji: string } | null } | undefined;
+
+  try {
+    const session = await auth();
+    if (session?.user?.id) {
+      const [dbUser, latestMood] = await Promise.all([
+        db.user.findUnique({
+          where: { id: session.user.id },
+          select: { name: true, avatar: true },
+        }),
+        db.mood.findFirst({
+          where: { userId: session.user.id },
+          orderBy: { createdAt: "desc" },
+          select: { emoji: true },
+        }),
+      ]);
+
+      if (dbUser) {
+        user = {
+          name: dbUser.name,
+          avatar: dbUser.avatar,
+          mood: latestMood,
+        };
+      }
+    }
+  } catch {
+    // Silently fail — sidebar will show default placeholder
+  }
+
   return (
     <div className="flex min-h-screen">
       {/* Desktop sidebar */}
       <div className="hidden md:block">
-        <Sidebar />
+        <Sidebar user={user} />
       </div>
 
       {/* Content area */}

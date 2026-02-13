@@ -75,3 +75,12 @@ model PlaylistItem {
   addedById String
   addedBy   User   @relation(fields: [addedById], references: [id])
 }
+
+model MoodPreset {
+  id        String   @id @default(cuid())
+  emoji     String
+  label     String
+  isDefault Boolean  @default(false)
+  coupleId  String
+  createdAt DateTime @default(now())
+}

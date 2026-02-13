@@ -5,18 +5,25 @@ import { useState, useRef, useEffect } from "react";
 interface EmojiPickerProps {
   currentMood: { emoji: string; label: string } | null;
   onMoodSelect: (emoji: string, label: string) => void;
+  presets: Array<{ emoji: string; label: string }>;
 }
 
-const MOODS = [
-  { emoji: "\u{1F60A}", label: "Счастлив", color: "var(--color-mood-happy)" },
-  { emoji: "\u{1F970}", label: "Влюблён", color: "var(--color-mood-love)" },
-  { emoji: "\u{1F622}", label: "Скучаю", color: "var(--color-mood-miss)" },
-  { emoji: "\u{1F634}", label: "Спокоен", color: "var(--color-mood-calm)" },
-  { emoji: "\u{1F929}", label: "Восторг", color: "var(--color-mood-excited)" },
-  { emoji: "\u{1F4AC}", label: "Поговорим", color: "var(--color-mood-need-talk)" },
-] as const;
+const EMOJI_COLORS: Record<string, string> = {
+  "\u{1F60A}": "var(--color-mood-happy)",
+  "\u{1F970}": "var(--color-mood-love)",
+  "\u{1F622}": "var(--color-mood-miss)",
+  "\u{1F634}": "var(--color-mood-calm)",
+  "\u{1F929}": "var(--color-mood-excited)",
+  "\u{1F4AC}": "var(--color-mood-need-talk)",
+};
 
-export function EmojiPicker({ currentMood, onMoodSelect }: EmojiPickerProps) {
+const DEFAULT_COLOR = "var(--color-accent-gold)";
+
+function getMoodColor(emoji: string): string {
+  return EMOJI_COLORS[emoji] ?? DEFAULT_COLOR;
+}
+
+export function EmojiPicker({ currentMood, onMoodSelect, presets }: EmojiPickerProps) {
   const [animatingEmoji, setAnimatingEmoji] = useState<string | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -33,14 +40,16 @@ export function EmojiPicker({ currentMood, onMoodSelect }: EmojiPickerProps) {
     timeoutRef.current = setTimeout(() => setAnimatingEmoji(null), 400);
   };
 
-  const selectedMood = MOODS.find((m) => m.emoji === currentMood?.emoji);
+  const selectedPreset = presets.find((m) => m.emoji === currentMood?.emoji);
+  const selectedColor = selectedPreset ? getMoodColor(selectedPreset.emoji) : undefined;
 
   return (
     <div>
-      <div className="grid grid-cols-3 gap-3">
-        {MOODS.map((mood) => {
+      <div className="flex flex-wrap gap-3">
+        {presets.map((mood) => {
           const isSelected = currentMood?.emoji === mood.emoji;
           const isAnimating = animatingEmoji === mood.emoji;
+          const color = getMoodColor(mood.emoji);
 
           return (
             <button
@@ -55,9 +64,9 @@ export function EmojiPicker({ currentMood, onMoodSelect }: EmojiPickerProps) {
               `}
               style={{
                 boxShadow: isSelected
-                  ? `0 0 12px ${mood.color}, 0 0 0 2px ${mood.color}`
+                  ? `0 0 12px ${color}, 0 0 0 2px ${color}`
                   : undefined,
-                borderColor: isSelected ? mood.color : undefined,
+                borderColor: isSelected ? color : undefined,
                 animation: isAnimating
                   ? "moodSelect 400ms ease-out"
                   : undefined,
@@ -69,12 +78,12 @@ export function EmojiPicker({ currentMood, onMoodSelect }: EmojiPickerProps) {
           );
         })}
       </div>
-      {selectedMood && (
+      {selectedPreset && (
         <p
           className="text-ui-sm text-center mt-3 transition-all duration-200"
-          style={{ color: selectedMood.color }}
+          style={{ color: selectedColor }}
         >
-          {selectedMood.label}
+          {selectedPreset.label}
         </p>
       )}
     </div>

@@ -118,13 +118,19 @@
 ---
 
 ### Фаза 7: Настройки
-**Статус:** ⬜ Не начата
+**Статус:** ✅ Завершена
 
 | Задача | Статус | Заметки |
 |--------|--------|---------|
-| Загрузка/смена аватарки | ⬜ | |
-| Управление настроениями (presets) | ⬜ | |
-| Генерация инвайт-ссылки | ⬜ | |
+| Server Actions (7 шт) | ✅ | getSettingsData, getAvatarUploadUrl, updateAvatar, updateStartDate, generateInviteLink, createMoodPreset, deleteMoodPreset |
+| Загрузка/смена аватарки | ✅ | ProfileSection: presigned URL → R2 (avatars/ prefix), 5MB limit, <img> preview, initials fallback |
+| Редактирование даты начала отношений | ✅ | RelationshipSection: date input, save-on-change, "Дата обновлена" feedback (auto-hide 3s) |
+| Генерация инвайт-ссылки | ✅ | InviteSection: генерация/копирование ссылки, статус "Партнёр подключён", одноразовый токен |
+| Управление настроениями (presets) | ✅ | MoodPresetManager: chip grid, add/delete custom, max 20, optimistic UI, auto-seed 6 defaults |
+| MoodPreset модель Prisma | ✅ | Модель + auto-seed при первом запросе (без отдельной миграции) |
+| EmojiPicker → DB presets | ✅ | Динамические presets из БД вместо хардкода, flex-wrap layout для кастомных |
+| Sidebar → реальные данные | ✅ | layout.tsx async, аватар/имя/настроение пользователя в сайдбаре |
+| Код-ревью + билд | ✅ | 1 medium security (URL protocol validation) + 3 medium a11y (aria-labels) + 1 low lint — все исправлены, npm run build проходит |
 ---
 
 ### Фаза 8: Деплой и финализация
@@ -364,4 +370,46 @@ src/components/playlist/PlaylistView.tsx           # Основной клиен
 src/app/(main)/playlist/page.tsx                  # Страница плейлиста (обновлена из placeholder)
 src/app/globals.css                               # Playlist CSS additions (.song-card-enter)
 docs/plans/2026-02-13-playlist-phase6.md          # План реализации фазы 6
+```
+
+### Сессия 6 — 2026-02-13
+**Цель:** Фаза 7 — Настройки
+**Что сделано:**
+- Реализована полная страница настроек: профиль (аватарка), дата отношений, инвайт-ссылка, кастомные настроения
+- MoodPreset модель в Prisma: auto-seed 6 defaults при первом запросе, max 20 presets
+- Server actions: getSettingsData, getAvatarUploadUrl, updateAvatar, updateStartDate, generateInviteLink, createMoodPreset, deleteMoodPreset — все с auth + couple проверками
+- ProfileSection: аватарка с presigned URL upload (avatars/ prefix), 5MB limit, initials fallback
+- RelationshipSection: дата начала отношений, save-on-change, auto-hide success message
+- InviteSection: генерация/копирование одноразовой ссылки, статус подключения партнёра
+- MoodPresetManager: chip grid, add/delete custom presets, optimistic UI, inline add form
+- EmojiPicker обновлён: динамические presets из БД вместо хардкода, flex-wrap для кастомных
+- Sidebar обновлён: layout.tsx async, реальные аватар/имя/настроение в сайдбаре
+- Реализация через agent teams (3 разработчика + 1 ревьюер) — 4 задачи с зависимостями
+- Код-ревью: 1 medium security + 3 medium a11y + 1 low lint — все исправлены
+
+**Исправленные баги (по результатам ревью):**
+1. Security: URL protocol validation в updateAvatar (разрешены только http/https)
+2. Accessibility: aria-label="Изменить аватар" на кнопку смены аватарки
+3. Accessibility: aria-labels на emoji/label инпуты и кнопки в MoodPresetManager
+4. Accessibility: Enter/Escape keyboard shortcuts в форме добавления настроения
+5. Lint: eslint-disable для <img> в Sidebar (R2 URLs не совместимы с next/image)
+
+**Новые/обновлённые файлы:**
+```
+src/actions/settings.ts                           # 7 Server Actions настроек
+src/components/settings/SettingsView.tsx           # Основной клиент-компонент
+src/components/settings/ProfileSection.tsx         # Аватарка + профиль
+src/components/settings/RelationshipSection.tsx    # Дата начала отношений
+src/components/settings/InviteSection.tsx          # Инвайт-ссылка
+src/components/settings/MoodPresetManager.tsx      # Кастомные настроения
+src/app/(main)/settings/page.tsx                  # Страница настроек (обновлена из placeholder)
+src/app/globals.css                               # Settings CSS additions
+src/components/dashboard/EmojiPicker.tsx           # Обновлён: DB presets
+src/components/dashboard/MoodSection.tsx           # Обновлён: presets prop
+src/actions/dashboard.ts                          # Обновлён: moodPresets в данных дашборда
+src/app/(main)/page.tsx                           # Обновлён: передаёт moodPresets
+src/components/layout/Sidebar.tsx                 # Обновлён: реальные данные пользователя
+src/app/(main)/layout.tsx                         # Обновлён: async, fetch user data
+prisma/schema.prisma                              # MoodPreset модель
+docs/plans/2026-02-13-settings-phase7.md          # План реализации фазы 7
 ```

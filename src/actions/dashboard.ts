@@ -23,6 +23,11 @@ interface PhotoSummary {
   description: string | null;
 }
 
+interface MoodPresetData {
+  emoji: string;
+  label: string;
+}
+
 interface DashboardData {
   partner: PartnerInfo;
   partnerMood: MoodData | null;
@@ -30,7 +35,17 @@ interface DashboardData {
   unreadNoteCount: number;
   recentPhotos: PhotoSummary[];
   coupleStartDate: string;
+  moodPresets: MoodPresetData[];
 }
+
+const DEFAULT_MOODS: MoodPresetData[] = [
+  { emoji: "\u{1F60A}", label: "Счастлив" },
+  { emoji: "\u{1F970}", label: "Влюблён" },
+  { emoji: "\u{1F622}", label: "Скучаю" },
+  { emoji: "\u{1F634}", label: "Спокоен" },
+  { emoji: "\u{1F929}", label: "Восторг" },
+  { emoji: "\u{1F4AC}", label: "Поговорим" },
+];
 
 export async function getDashboardData(): Promise<
   { success: true; data: DashboardData } | { error: string }
@@ -59,7 +74,7 @@ export async function getDashboardData(): Promise<
     return { error: "Партнёр ещё не зарегистрирован" };
   }
 
-  const [partner, partnerMood, myMood, unreadNoteCount, recentPhotos] =
+  const [partner, partnerMood, myMood, unreadNoteCount, recentPhotos, moodPresetsRaw] =
     await Promise.all([
       db.user.findUnique({
         where: { id: partnerId },
@@ -83,10 +98,29 @@ export async function getDashboardData(): Promise<
           description: true,
         },
       }),
+      db.moodPreset.findMany({
+        where: { coupleId: couple.id },
+        orderBy: { createdAt: "asc" },
+        select: { emoji: true, label: true },
+      }),
     ]);
 
   if (!partner) {
     return { error: "Партнёр не найден" };
+  }
+
+  // Seed default mood presets if none exist
+  let moodPresets: MoodPresetData[] = moodPresetsRaw;
+  if (moodPresets.length === 0) {
+    await db.moodPreset.createMany({
+      data: DEFAULT_MOODS.map((m) => ({
+        emoji: m.emoji,
+        label: m.label,
+        isDefault: true,
+        coupleId: couple.id,
+      })),
+    });
+    moodPresets = DEFAULT_MOODS;
   }
 
   return {
@@ -98,6 +132,7 @@ export async function getDashboardData(): Promise<
       unreadNoteCount,
       recentPhotos,
       coupleStartDate: couple.startDate.toISOString(),
+      moodPresets,
     },
   };
 }

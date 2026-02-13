@@ -13,6 +13,7 @@ interface MoodSectionProps {
     updatedAt: string;
   } | null;
   currentUserMood: { emoji: string; label: string } | null;
+  moodPresets: Array<{ emoji: string; label: string }>;
 }
 
 function timeAgoRussian(dateStr: string): string {
@@ -60,6 +61,7 @@ export function MoodSection({
   partnerId,
   initialPartnerMood,
   currentUserMood,
+  moodPresets,
 }: MoodSectionProps) {
   const [partnerMood, setPartnerMood] = useState(initialPartnerMood);
   const [userMood, setUserMood] = useState(currentUserMood);
@@ -150,7 +152,7 @@ export function MoodSection({
         <p className="text-ui-sm text-text-muted-dark mb-3">
           Твоё настроение:
         </p>
-        <EmojiPicker currentMood={userMood} onMoodSelect={handleMoodSelect} />
+        <EmojiPicker currentMood={userMood} onMoodSelect={handleMoodSelect} presets={moodPresets} />
       </div>
     </div>
   );
