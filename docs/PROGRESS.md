@@ -67,20 +67,22 @@
 ---
 
 ### Фаза 4: Таймлайн (Моменты)
-**Статус:** ⬜ Не начата
+**Статус:** ✅ Завершена
 
 | Задача | Статус | Заметки |
 |--------|--------|---------|
-| Горизонтальный scroll (desktop) | ⬜ | |
-| Вертикальный scroll (mobile) | ⬜ | |
-| Карточки фото с датой/описанием/автором | ⬜ | |
-| Модальное окно просмотра фото | ⬜ | |
-| Загрузка фото (presigned URL → R2) | ⬜ | |
-| Генерация thumbnail (sharp) | ⬜ | |
-| Scroll-triggered анимации | ⬜ | IntersectionObserver |
+| Горизонтальный scroll (desktop) | ✅ | Flex layout, wheel→horizontal scroll, year groups |
+| Вертикальный scroll (mobile) | ✅ | Вертикальная линия слева, карточки справа, dot markers |
+| Карточки фото с датой/описанием/автором | ✅ | TimelineCard: paper-texture, russian dates, author initials |
+| Модальное окно просмотра фото | ✅ | PhotoModal: overlay blur, Escape закрытие, body scroll lock |
+| Загрузка фото (presigned URL → R2) | ✅ | AddMomentModal: file preview, date picker, 10MB limit, 15min presigned URL |
+| Генерация thumbnail (sharp) | ✅ | POST /api/thumbnail: sharp resize 400px webp, fire-and-forget |
+| Scroll-triggered анимации | ✅ | IntersectionObserver + .timeline-card.visible, one-shot |
+| Код-ревью + билд | ✅ | 8 issues found and fixed, npm run build проходит |
 
 **Что нужно от тебя (Сабыржан):**
 - [ ] Убедиться что R2 bucket создан и env переменные заполнены
+- [ ] Добавить R2_PUBLIC_URL в .env (публичный URL R2 bucket)
 
 ---
 
@@ -266,4 +268,39 @@ src/components/dashboard/EmojiPicker.tsx           # Выбор настроен
 src/components/dashboard/UnreadNotesCard.tsx       # Карточка непрочитанных записок
 src/components/dashboard/PhotoPreviewCard.tsx      # Превью последних фото
 src/app/(main)/page.tsx                           # Дашборд (обновлён из placeholder)
+```
+
+### Сессия 3 — 2026-02-13
+**Цель:** Фаза 4 — Таймлайн (Моменты)
+**Что сделано:**
+- Реализован полный таймлайн: горизонтальный scroll (desktop) + вертикальный scroll (mobile)
+- Server actions: getTimelinePhotos, createPhoto, getPresignedUploadUrl (с presigned PUT URL для R2)
+- API route POST /api/thumbnail — генерация thumbnail через sharp (400px webp)
+- TimelineCard: карточка фото с датой на русском, описанием, автором (Polaroid-стиль)
+- PhotoModal: полноразмерное фото с overlay, Escape, body scroll lock
+- AddMomentModal: загрузка фото (file preview, date picker, описание), upload flow через presigned URL
+- TimelineView: группировка по годам, IntersectionObserver для scroll-triggered анимаций
+- CSS: timeline-card.visible, timeline-line/-vertical, timeline-dot, modal-enter
+- Код-ревью: 8 issues найдено и исправлено
+
+**Исправленные баги (по результатам ревью):**
+1. next/image с blob URL (createObjectURL) — заменён на <img> для превью
+2. Отсутствие проверки владельца фото в thumbnail API
+3. Отсутствие защиты от path traversal в параметре key (thumbnail API)
+4. Отсутствие try/catch вокруг request.json() в thumbnail API
+5. Отсутствие try/catch вокруг DB/S3 вызовов в server actions
+6. R2_PUBLIC_URL не был в .env.example
+7. next.config.ts — отсутствие *.r2.dev в remotePatterns для next/image
+8. sharp уже в serverExternalPackages (подтверждено, без изменений)
+
+**Новые файлы:**
+```
+src/actions/timeline.ts                           # Server Actions таймлайна
+src/app/api/thumbnail/route.ts                    # API генерации thumbnail
+src/components/timeline/TimelineCard.tsx           # Карточка фото
+src/components/timeline/PhotoModal.tsx             # Модальное окно просмотра
+src/components/timeline/AddMomentModal.tsx         # Модальное окно загрузки
+src/components/timeline/TimelineView.tsx           # Основной клиент-компонент таймлайна
+src/app/(main)/timeline/page.tsx                  # Страница таймлайна (обновлена из placeholder)
+src/app/globals.css                               # Timeline CSS additions
 ```
