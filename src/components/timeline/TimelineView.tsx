@@ -59,6 +59,8 @@ export function TimelineView({ photos }: TimelineViewProps) {
     const container = wrapperRef.current;
     if (!container) return;
 
+    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -68,7 +70,11 @@ export function TimelineView({ photos }: TimelineViewProps) {
           }
         }
       },
-      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" },
+      {
+        root: isDesktop ? desktopScrollRef.current : null,
+        threshold: 0.1,
+        rootMargin: isDesktop ? "0px -50px 0px 0px" : "0px 0px -50px 0px",
+      },
     );
 
     const cards = container.querySelectorAll(".timeline-card");

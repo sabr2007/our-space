@@ -70,6 +70,10 @@ export function AddSongModal({ isOpen, onClose, onSuccess }: AddSongModalProps) 
         setError("Ссылка должна содержать от 1 до 500 символов");
         return;
       }
+      if (!/^https?:\/\//i.test(trimmedUrl)) {
+        setError("Ссылка должна начинаться с http:// или https://");
+        return;
+      }
       if (trimmedArtist.length > 200) {
         setError("Имя исполнителя не должно превышать 200 символов");
         return;

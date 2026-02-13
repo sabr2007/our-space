@@ -150,7 +150,7 @@ export function MoodPresetManager({ presets: initial }: MoodPresetManagerProps) 
 
       {/* Add form */}
       {showAddForm && (
-        <div className="flex items-center gap-2 mt-4" onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleAdd(); } if (e.key === "Escape") handleCancel(); }}>
+        <div className="flex flex-wrap items-center gap-2 mt-4" onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleAdd(); } if (e.key === "Escape") handleCancel(); }}>
           <input
             type="text"
             value={newEmoji}
@@ -167,7 +167,7 @@ export function MoodPresetManager({ presets: initial }: MoodPresetManagerProps) 
             placeholder="Название"
             maxLength={50}
             aria-label="Название настроения"
-            className="flex-1 bg-surface-secondary border border-border-light rounded-[var(--radius-md)] px-3 py-2 text-body-sm text-text-dark focus:border-accent-gold focus:outline-none transition-colors"
+            className="flex-1 min-w-[120px] bg-surface-secondary border border-border-light rounded-[var(--radius-md)] px-3 py-2 text-body-sm text-text-dark focus:border-accent-gold focus:outline-none transition-colors"
           />
           <button
             onClick={handleAdd}

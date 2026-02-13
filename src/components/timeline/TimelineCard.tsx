@@ -34,7 +34,7 @@ export function TimelineCard({ photo, onClick }: TimelineCardProps) {
   return (
     <button
       onClick={onClick}
-      className="timeline-card card w-64 shrink-0 cursor-pointer overflow-hidden rounded-[var(--radius-lg)] border border-border-light bg-surface-primary shadow-[var(--shadow-card)] text-left"
+      className="timeline-card card w-full md:w-64 md:shrink-0 cursor-pointer overflow-hidden rounded-[var(--radius-lg)] border border-border-light bg-surface-primary shadow-[var(--shadow-card)] text-left"
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-t-[12px]">
         <Image

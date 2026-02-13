@@ -28,7 +28,7 @@ export default function MobileNav() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center gap-1 relative ${
+              className={`flex flex-col items-center justify-center gap-1 relative min-w-[44px] min-h-[44px] py-1 ${
                 isActive ? "text-accent-gold" : "text-text-muted-light"
               }`}
             >

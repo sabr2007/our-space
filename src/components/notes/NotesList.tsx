@@ -95,7 +95,7 @@ export function NotesList({
       <div className="stagger-2 flex gap-6 border-b border-border-dark">
         <button
           onClick={() => setActiveTab("received")}
-          className={`pb-3 font-ui text-[15px] transition-colors relative ${
+          className={`px-2 py-3 font-ui text-[15px] transition-colors relative min-h-[44px] ${
             activeTab === "received"
               ? "text-text-cream"
               : "text-text-muted-light hover:text-text-cream"
@@ -113,7 +113,7 @@ export function NotesList({
         </button>
         <button
           onClick={() => setActiveTab("sent")}
-          className={`pb-3 font-ui text-[15px] transition-colors relative ${
+          className={`px-2 py-3 font-ui text-[15px] transition-colors relative min-h-[44px] ${
             activeTab === "sent"
               ? "text-text-cream"
               : "text-text-muted-light hover:text-text-cream"

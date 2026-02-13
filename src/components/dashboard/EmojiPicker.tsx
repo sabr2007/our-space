@@ -60,7 +60,7 @@ export function EmojiPicker({ currentMood, onMoodSelect, presets }: EmojiPickerP
                 w-12 h-12 rounded-full flex items-center justify-center text-2xl
                 bg-surface-secondary border border-border-light
                 transition-all duration-200
-                hover:scale-115
+                hover:scale-110
               `}
               style={{
                 boxShadow: isSelected

@@ -6,6 +6,8 @@ import { MoodSection } from "@/components/dashboard/MoodSection";
 import { UnreadNotesCard } from "@/components/dashboard/UnreadNotesCard";
 import { PhotoPreviewCard } from "@/components/dashboard/PhotoPreviewCard";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const session = await auth();
   if (!session?.user) {

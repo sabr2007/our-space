@@ -58,7 +58,7 @@ export default function SongCard({ item, isOwner, onDelete }: SongCardProps) {
               href={item.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-accent-gold hover:text-accent-gold-light transition-colors flex-shrink-0"
+              className="text-accent-gold hover:text-accent-gold-light transition-colors flex-shrink-0 min-w-[44px] min-h-[44px] inline-flex items-center justify-center -m-2"
               aria-label={`Открыть ${item.title}`}
             >
               <ExternalLink size={16} />
@@ -91,7 +91,7 @@ export default function SongCard({ item, isOwner, onDelete }: SongCardProps) {
             {isOwner && (
               <button
                 onClick={() => onDelete(item.id)}
-                className="text-text-muted-dark/50 hover:text-accent-rose transition-colors"
+                className="text-text-muted-dark/50 hover:text-accent-rose transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center -m-2"
                 aria-label="Удалить трек"
               >
                 <Trash2 size={16} />

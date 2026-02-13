@@ -103,14 +103,18 @@ export function MoodSection({
 
   const handleMoodSelect = useCallback(
     async (emoji: string, label: string) => {
+      const previousMood = userMood;
       setUserMood({ emoji, label });
       try {
-        await setMood(emoji, label);
+        const result = await setMood(emoji, label);
+        if ("error" in result) {
+          setUserMood(previousMood);
+        }
       } catch {
-        // Silently ignore - mood will be retried on next selection
+        setUserMood(previousMood);
       }
     },
-    []
+    [userMood]
   );
 
   return (
