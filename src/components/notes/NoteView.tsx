@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { markNoteAsRead } from "@/actions/notes";
 
@@ -36,6 +36,7 @@ function formatDate(iso: string): string {
 
 export function NoteView({ note, currentUserId, onBack }: NoteViewProps) {
   const markedRef = useRef(false);
+  const [isRead, setIsRead] = useState(note.isRead);
 
   // Mark as read when viewing unread received note
   useEffect(() => {
@@ -46,6 +47,7 @@ export function NoteView({ note, currentUserId, onBack }: NoteViewProps) {
     ) {
       markedRef.current = true;
       markNoteAsRead(note.id);
+      setIsRead(true);
     }
   }, [note.id, note.isRead, note.recipient.id, currentUserId]);
 
@@ -83,7 +85,7 @@ export function NoteView({ note, currentUserId, onBack }: NoteViewProps) {
         <div className="border-t border-border-light pt-4">
           <p className="text-ui-sm text-text-muted-dark">
             {formatDate(note.createdAt)}
-            {isReceived && !note.isRead && (
+            {isReceived && !isRead && (
               <span className="ml-2 text-accent-gold">Новая</span>
             )}
           </p>

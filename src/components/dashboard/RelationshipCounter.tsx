@@ -122,7 +122,7 @@ export function RelationshipCounter({ startDate }: RelationshipCounterProps) {
       <p className="font-display text-body-md text-text-muted-light mb-2">
         Вместе
       </p>
-      <p className="font-display font-bold text-display-xl max-md:text-display-lg text-text-cream">
+      <p className="font-display font-bold text-display-xl max-md:text-display-lg max-sm:text-display-md text-text-cream">
         {parts.length > 0 ? parts.join(", ") : ""}
       </p>
       <p className="font-display text-display-md text-text-cream mt-1">

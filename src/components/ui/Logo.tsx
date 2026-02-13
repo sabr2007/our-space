@@ -26,7 +26,7 @@ export function Logo({ size = "md" }: LogoProps) {
   return (
     <div className={`flex flex-col items-center ${config.gap}`}>
       <h1
-        className={`font-display font-bold text-text-cream ${config.heading}`}
+        className={`font-display font-bold text-text-cream whitespace-nowrap ${config.heading}`}
       >
         Our Space
       </h1>

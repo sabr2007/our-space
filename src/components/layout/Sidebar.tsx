@@ -83,11 +83,11 @@ export default function Sidebar({ user }: SidebarProps) {
               {initial}
             </div>
           )}
-          <div className="flex flex-col">
-            <span className="font-ui text-sm text-text-cream">
+          <div className="flex flex-col min-w-0">
+            <span className="font-ui text-sm text-text-cream truncate">
               {user?.name ?? "Пользователь"}
             </span>
-            <span className="text-xs text-text-muted-light">
+            <span className="text-xs text-text-muted-light truncate">
               {user?.mood?.emoji ?? "настроение..."}
             </span>
           </div>

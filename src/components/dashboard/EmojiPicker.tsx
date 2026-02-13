@@ -45,7 +45,7 @@ export function EmojiPicker({ currentMood, onMoodSelect, presets }: EmojiPickerP
 
   return (
     <div>
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-3 justify-center">
         {presets.map((mood) => {
           const isSelected = currentMood?.emoji === mood.emoji;
           const isAnimating = animatingEmoji === mood.emoji;

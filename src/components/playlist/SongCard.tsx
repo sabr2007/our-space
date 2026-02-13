@@ -84,7 +84,7 @@ export default function SongCard({ item, isOwner, onDelete }: SongCardProps) {
 
           {/* Meta row */}
           <div className="flex justify-between items-center mt-3">
-            <span className="text-ui-sm text-text-muted-dark">
+            <span className="text-ui-sm text-text-muted-dark truncate min-w-0">
               Добавил(а) {item.addedBy.name} &middot;{" "}
               {formatRelativeTime(item.createdAt)}
             </span>

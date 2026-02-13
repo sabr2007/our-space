@@ -12,7 +12,11 @@ const navItems = [
   { href: "/settings", label: "Ещё", icon: Settings },
 ];
 
-export default function MobileNav() {
+interface MobileNavProps {
+  unreadNotes?: number;
+}
+
+export default function MobileNav({ unreadNotes }: MobileNavProps) {
   const pathname = usePathname();
 
   return (
@@ -33,7 +37,7 @@ export default function MobileNav() {
               }`}
             >
               <item.icon size={20} strokeWidth={1.5} />
-              {item.href === "/notes" && (
+              {item.href === "/notes" && unreadNotes !== undefined && unreadNotes > 0 && (
                 <span className="absolute -top-0.5 -right-1.5 w-2 h-2 bg-accent-rose rounded-full" />
               )}
               <span className="text-[11px] font-ui">{item.label}</span>

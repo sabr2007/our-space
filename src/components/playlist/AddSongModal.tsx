@@ -118,7 +118,7 @@ export function AddSongModal({ isOpen, onClose, onSuccess }: AddSongModalProps) 
       onClick={handleClose}
     >
       <div
-        className="modal-enter relative w-full max-w-[560px] mx-4 bg-surface-primary rounded-[var(--radius-xl)] shadow-[var(--shadow-lifted)] p-6 sm:p-8"
+        className="modal-enter relative w-full max-w-[560px] mx-4 max-h-[90vh] overflow-y-auto bg-surface-primary rounded-[var(--radius-xl)] shadow-[var(--shadow-lifted)] p-6 sm:p-8"
         onClick={(e) => e.stopPropagation()}
       >
         <button

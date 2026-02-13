@@ -113,7 +113,7 @@ export function TimelineView({ photos }: TimelineViewProps) {
     <div className="py-8 md:py-12">
       {/* Header */}
       <div className="stagger-1 mb-8 flex items-center justify-between">
-        <h1 className="text-display-lg text-text-cream">Наши моменты</h1>
+        <h1 className="text-display-md md:text-display-lg text-text-cream">Наши моменты</h1>
         {!isEmpty && (
           <button
             onClick={() => setShowAddModal(true)}

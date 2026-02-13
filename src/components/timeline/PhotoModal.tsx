@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
 
@@ -29,6 +29,22 @@ interface PhotoModalProps {
 }
 
 export function PhotoModal({ photo, onClose }: PhotoModalProps) {
+  const touchStartY = useRef(0);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+  }, []);
+
+  const handleTouchEnd = useCallback(
+    (e: React.TouchEvent) => {
+      const touchEndY = e.changedTouches[0].clientY;
+      if (touchEndY - touchStartY.current > 100) {
+        onClose();
+      }
+    },
+    [onClose],
+  );
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -54,6 +70,8 @@ export function PhotoModal({ photo, onClose }: PhotoModalProps) {
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-bg-deep/90 backdrop-blur-[8px]"
       onClick={onClose}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <div
         className="modal-enter relative flex max-h-[90vh] max-w-[90vw] flex-col items-center"
@@ -61,7 +79,7 @@ export function PhotoModal({ photo, onClose }: PhotoModalProps) {
       >
         <button
           onClick={onClose}
-          className="absolute -top-2 -right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-bg-elevated/80 text-text-muted-light transition-colors hover:text-text-cream"
+          className="absolute top-2 right-2 md:-top-2 md:-right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-bg-elevated/80 text-text-muted-light transition-colors hover:text-text-cream"
           aria-label="Закрыть"
         >
           <X size={20} />

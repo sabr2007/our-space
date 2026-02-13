@@ -96,7 +96,7 @@ export function NoteComposer({
       onClick={handleClose}
     >
       <div
-        className="modal-enter relative w-full max-w-[560px] mx-4 bg-surface-primary rounded-[var(--radius-xl)] shadow-[var(--shadow-lifted)] p-6 sm:p-8"
+        className="modal-enter relative w-full max-w-[560px] mx-4 max-h-[90vh] overflow-y-auto bg-surface-primary rounded-[var(--radius-xl)] shadow-[var(--shadow-lifted)] p-6 sm:p-8"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -120,7 +120,7 @@ export function NoteComposer({
               maxLength={5000}
               rows={8}
               autoFocus
-              className="w-full min-h-[240px] resize-none bg-surface-primary notebook-lines border border-border-light rounded-[var(--radius-md)] px-5 py-4 text-text-dark placeholder:text-text-muted-dark/50 placeholder:italic font-body text-[18px] leading-[32px] focus:border-accent-gold focus:outline-none transition-colors duration-200"
+              className="w-full min-h-[160px] sm:min-h-[240px] resize-none bg-surface-primary notebook-lines border border-border-light rounded-[var(--radius-md)] px-5 py-4 text-text-dark placeholder:text-text-muted-dark/50 placeholder:italic font-body text-[18px] leading-[32px] focus:border-accent-gold focus:outline-none transition-colors duration-200"
             />
             <p className="mt-1 text-right font-ui text-xs text-text-muted-dark/50">
               {content.length}/5000

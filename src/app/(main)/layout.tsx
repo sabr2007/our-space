@@ -9,11 +9,12 @@ export default async function MainLayout({
   children: React.ReactNode;
 }) {
   let user: { name: string; avatar: string | null; mood: { emoji: string } | null } | undefined;
+  let unreadNotes = 0;
 
   try {
     const session = await auth();
     if (session?.user?.id) {
-      const [dbUser, latestMood] = await Promise.all([
+      const [dbUser, latestMood, unreadCount] = await Promise.all([
         db.user.findUnique({
           where: { id: session.user.id },
           select: { name: true, avatar: true },
@@ -23,7 +24,12 @@ export default async function MainLayout({
           orderBy: { createdAt: "desc" },
           select: { emoji: true },
         }),
+        db.note.count({
+          where: { recipientId: session.user.id, isRead: false },
+        }),
       ]);
+
+      unreadNotes = unreadCount;
 
       if (dbUser) {
         user = {
@@ -53,7 +59,7 @@ export default async function MainLayout({
 
       {/* Mobile bottom nav */}
       <div className="block md:hidden">
-        <MobileNav />
+        <MobileNav unreadNotes={unreadNotes} />
       </div>
     </div>
   );
