@@ -123,7 +123,7 @@ export function MoodPresetManager({ presets: initial }: MoodPresetManagerProps) 
             {!preset.isDefault && (
               <button
                 onClick={() => handleDelete(preset.id)}
-                className="ml-1 text-text-muted-dark hover:text-accent-rose transition-colors cursor-pointer text-sm"
+                className="ml-1 min-w-[28px] min-h-[28px] inline-flex items-center justify-center text-text-muted-dark hover:text-accent-rose transition-colors cursor-pointer text-sm"
                 aria-label={`Удалить ${preset.label}`}
               >
                 &times;

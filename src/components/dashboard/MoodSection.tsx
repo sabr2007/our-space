@@ -76,9 +76,9 @@ export function MoodSection({
         const res = await fetch(`/api/mood?partnerId=${partnerId}`);
         if (res.ok) {
           const data = await res.json();
-          if (data && data.emoji) {
-            setPartnerMood(data);
-            setTimeAgo(timeAgoRussian(data.updatedAt));
+          if (data?.mood && data.mood.emoji) {
+            setPartnerMood(data.mood);
+            setTimeAgo(timeAgoRussian(data.mood.updatedAt));
           }
         }
       } catch {
@@ -125,7 +125,7 @@ export function MoodSection({
           Настроение {partnerName}:
         </p>
         {partnerMood ? (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3" aria-live="polite">
             <span
               className="text-[32px] leading-none"
               style={{

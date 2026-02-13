@@ -13,7 +13,7 @@ export default async function TimelinePage() {
 
   const result = await getTimelinePhotos();
 
-  if ("error" in result) {
+  if (!("success" in result)) {
     return (
       <div className="py-12">
         <h1 className="text-display-lg text-text-cream mb-4">Моменты</h1>

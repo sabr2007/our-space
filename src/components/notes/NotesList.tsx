@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PenLine, Mail, MailOpen } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -52,6 +52,11 @@ export function NotesList({
   const [activeTab, setActiveTab] = useState<"received" | "sent">("received");
   const [selectedNote, setSelectedNote] = useState<NoteItem | null>(null);
   const [composerOpen, setComposerOpen] = useState(false);
+  const hasAnimatedRef = useRef(false);
+
+  useEffect(() => {
+    hasAnimatedRef.current = true;
+  }, []);
 
   const handleComposeSuccess = useCallback(() => {
     router.refresh();
@@ -159,9 +164,9 @@ export function NotesList({
                 key={note.id}
                 onClick={() => setSelectedNote(note)}
                 className="w-full text-left"
-                style={{
+                style={!hasAnimatedRef.current ? {
                   animation: `noteUnfold 400ms var(--ease-smooth) ${index * 60}ms both`,
-                }}
+                } : undefined}
               >
                 <div
                   className={`

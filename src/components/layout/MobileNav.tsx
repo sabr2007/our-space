@@ -2,15 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Camera, Mail, Music, Settings } from "lucide-react";
-
-const navItems = [
-  { href: "/", label: "Главная", icon: Home },
-  { href: "/timeline", label: "Моменты", icon: Camera },
-  { href: "/notes", label: "Записки", icon: Mail },
-  { href: "/playlist", label: "Музыка", icon: Music },
-  { href: "/settings", label: "Ещё", icon: Settings },
-];
+import { navItems } from "@/lib/navigation";
 
 interface MobileNavProps {
   unreadNotes?: number;
@@ -32,7 +24,7 @@ export default function MobileNav({ unreadNotes }: MobileNavProps) {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center gap-1 relative min-w-[44px] min-h-[44px] py-1 ${
+              className={`flex flex-col items-center justify-center gap-1 relative min-w-[44px] min-h-[44px] py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-gold focus-visible:rounded-lg ${
                 isActive ? "text-accent-gold" : "text-text-muted-light"
               }`}
             >
@@ -40,7 +32,7 @@ export default function MobileNav({ unreadNotes }: MobileNavProps) {
               {item.href === "/notes" && unreadNotes !== undefined && unreadNotes > 0 && (
                 <span className="absolute -top-0.5 -right-1.5 w-2 h-2 bg-accent-rose rounded-full" />
               )}
-              <span className="text-[11px] font-ui">{item.label}</span>
+              <span className="text-[11px] font-ui">{item.shortLabel}</span>
             </Link>
           );
         })}

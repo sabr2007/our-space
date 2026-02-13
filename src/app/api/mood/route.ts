@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
   }
 
   if (cached) {
-    return NextResponse.json(JSON.parse(cached));
+    return NextResponse.json({ mood: JSON.parse(cached) });
   }
 
   const mood = await db.mood.findFirst({
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
   });
 
   if (!mood) {
-    return NextResponse.json(null);
+    return NextResponse.json({ mood: null });
   }
 
   const moodData = {
@@ -64,5 +64,5 @@ export async function GET(request: NextRequest) {
     // Redis unavailable, skip caching
   }
 
-  return NextResponse.json(moodData);
+  return NextResponse.json({ mood: moodData });
 }

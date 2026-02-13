@@ -91,7 +91,8 @@ export function TimelineView({ photos }: TimelineViewProps) {
     const handleWheel = (e: WheelEvent) => {
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
         e.preventDefault();
-        el.scrollLeft += e.deltaY;
+        const delta = Math.sign(e.deltaY) * Math.min(Math.abs(e.deltaY), 80);
+        el.scrollLeft += delta;
       }
     };
 

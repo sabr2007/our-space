@@ -2,15 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Camera, Mail, Music, Settings } from "lucide-react";
-
-const navItems = [
-  { href: "/", label: "Главная", icon: Home },
-  { href: "/timeline", label: "Моменты", icon: Camera },
-  { href: "/notes", label: "Записки", icon: Mail },
-  { href: "/playlist", label: "Музыка", icon: Music },
-  { href: "/settings", label: "Настройки", icon: Settings },
-];
+import { navItems } from "@/lib/navigation";
 
 interface SidebarProps {
   user?: {
@@ -51,7 +43,7 @@ export default function Sidebar({ user }: SidebarProps) {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 py-2.5 px-4 rounded-lg font-ui text-[15px] font-medium transition-colors duration-200 ${
+              className={`flex items-center gap-3 py-3 px-4 rounded-lg font-ui text-[15px] font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-gold focus-visible:rounded-lg ${
                 isActive
                   ? "text-text-cream bg-[rgba(200,148,63,0.15)]"
                   : "text-text-muted-light hover:text-text-cream"

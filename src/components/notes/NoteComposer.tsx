@@ -101,7 +101,7 @@ export function NoteComposer({
       >
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 text-text-muted-dark hover:text-text-dark transition-colors"
+          className="absolute top-4 right-4 p-2 text-text-muted-dark hover:text-text-dark transition-colors"
           aria-label="Закрыть"
         >
           <X size={20} />

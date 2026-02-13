@@ -3,19 +3,7 @@
 import { useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
-
-const MONTHS_RU = [
-  "января", "февраля", "марта", "апреля", "мая", "июня",
-  "июля", "августа", "сентября", "октября", "ноября", "декабря",
-];
-
-function formatDateRu(dateStr: string): string {
-  const date = new Date(dateStr);
-  const day = date.getDate();
-  const month = MONTHS_RU[date.getMonth()];
-  const year = date.getFullYear();
-  return `${day} ${month} ${year}`;
-}
+import { formatDateRu } from "@/lib/date";
 
 interface PhotoModalProps {
   photo: {

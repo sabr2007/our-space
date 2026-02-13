@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 
 interface RelationshipCounterProps {
   startDate: string;
@@ -82,7 +82,7 @@ function useAnimatedValue(target: number, duration: number, delay: number) {
 }
 
 export function RelationshipCounter({ startDate }: RelationshipCounterProps) {
-  const start = new Date(startDate);
+  const start = useMemo(() => new Date(startDate), [startDate]);
   const [diff, setDiff] = useState(() => calculateDifference(start, new Date()));
 
   useEffect(() => {

@@ -1,19 +1,7 @@
 "use client";
 
 import Image from "next/image";
-
-const MONTHS_RU = [
-  "января", "февраля", "марта", "апреля", "мая", "июня",
-  "июля", "августа", "сентября", "октября", "ноября", "декабря",
-];
-
-function formatDateRu(dateStr: string): string {
-  const date = new Date(dateStr);
-  const day = date.getDate();
-  const month = MONTHS_RU[date.getMonth()];
-  const year = date.getFullYear();
-  return `${day} ${month} ${year}`;
-}
+import { formatDateRu } from "@/lib/date";
 
 interface TimelineCardProps {
   photo: {
@@ -36,7 +24,7 @@ export function TimelineCard({ photo, onClick }: TimelineCardProps) {
       onClick={onClick}
       className="timeline-card card w-full md:w-64 md:shrink-0 cursor-pointer overflow-hidden rounded-[var(--radius-lg)] border border-border-light bg-surface-primary shadow-[var(--shadow-card)] text-left"
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-t-[12px]">
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-t-[12px] bg-surface-secondary">
         <Image
           src={imageSrc}
           alt={photo.description ?? ""}

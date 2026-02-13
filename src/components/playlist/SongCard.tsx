@@ -79,12 +79,13 @@ export default function SongCard({ item, isOwner, onDelete }: SongCardProps) {
               <span className="text-hand-md italic text-accent-rose">
                 {item.comment}
               </span>
+              <span className="text-2xl text-accent-rose/30 leading-none ml-1">{"\u201D"}</span>
             </div>
           )}
 
           {/* Meta row */}
           <div className="flex justify-between items-center mt-3">
-            <span className="text-ui-sm text-text-muted-dark truncate min-w-0">
+            <span className="text-ui-sm text-text-muted-dark truncate min-w-0" suppressHydrationWarning>
               Добавил(а) {item.addedBy.name} &middot;{" "}
               {formatRelativeTime(item.createdAt)}
             </span>

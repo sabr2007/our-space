@@ -12,7 +12,7 @@ const variantStyles = {
   secondary:
     "bg-transparent text-text-muted-light border border-border-dark font-ui font-medium text-[15px] px-6 py-3 rounded-[12px] hover:border-accent-gold hover:text-text-cream transition-all duration-200",
   ghost:
-    "bg-transparent text-accent-gold font-ui font-medium text-[15px] px-4 py-2 hover:text-accent-gold-light hover:underline transition-all duration-200",
+    "bg-transparent text-accent-gold font-ui font-medium text-[15px] px-4 py-2.5 hover:text-accent-gold-light hover:underline transition-all duration-200",
 } as const;
 
 export function Button({
