@@ -50,16 +50,19 @@
 ---
 
 ### Фаза 3: Дашборд (Главная)
-**Статус:** ⬜ Не начата
+**Статус:** ✅ Завершена
 
 | Задача | Статус | Заметки |
 |--------|--------|---------|
-| Счётчик отношений (animated count-up) | ⬜ | От Couple.startDate |
-| Настроение партнёра (polling 30s, Redis cache) | ⬜ | |
-| Выбор своего настроения (emoji picker) | ⬜ | |
-| Бейдж непрочитанных записок | ⬜ | |
-| Превью последних фото | ⬜ | |
-| Staggered reveal анимация | ⬜ | |
+| Счётчик отношений (animated count-up) | ✅ | easeOutCubic, staggered 0/100/200ms, русская плюрализация, обновление в полночь |
+| Настроение партнёра (polling 30s, Redis cache) | ✅ | Redis cache 24h TTL, DB fallback, относительное время на русском |
+| Выбор своего настроения (emoji picker) | ✅ | 6 пресетов, 3x2 grid, цветовые glow по настроению, moodSelect анимация |
+| Бейдж непрочитанных записок | ✅ | Карточка-ссылка на /notes, gold border при наличии непрочитанных |
+| Превью последних фото | ✅ | Polaroid-стиль с наклоном, до 3 фото, next/image |
+| Staggered reveal анимация | ✅ | stagger-1..4: приветствие → счётчик → настроение → карточки |
+| Server actions (getDashboardData, setMood) | ✅ | Promise.all для параллельных запросов, Redis try/catch |
+| API route GET /api/mood | ✅ | Авторизация + проверка партнёрства, Redis→DB fallback |
+| Код-ревью + билд | ✅ | 3 критических + 6 средних багов найдено и исправлено, npm run build проходит |
 
 ---
 
@@ -114,8 +117,6 @@
 | Загрузка/смена аватарки | ⬜ | |
 | Управление настроениями (presets) | ⬜ | |
 | Генерация инвайт-ссылки | ⬜ | |
-| Настройка даты отношений | ⬜ | |
-
 ---
 
 ### Фаза 8: Деплой и финализация
@@ -229,4 +230,40 @@ src/app/(auth)/invite/[token]/InviteForm.tsx  # Инвайт — форма ре
 src/app/(auth)/setup/page.tsx                 # Первичная настройка — сервер
 src/app/(auth)/setup/SetupForm.tsx            # Первичная настройка — форма
 src/actions/auth.ts                           # Server Actions аутентификации
+```
+
+### Сессия 2 — 2026-02-13
+**Цель:** Фаза 3 — Дашборд (Главная)
+**Что сделано:**
+- Реализован полный дашборд с 5 виджетами: счётчик отношений, настроение партнёра, emoji picker, записки, фото
+- Server actions: getDashboardData (параллельные запросы через Promise.all), setMood (с валидацией)
+- API route GET /api/mood — polling настроения с авторизацией + проверкой партнёрства
+- Redis кеширование настроений (24h TTL) с graceful fallback на БД
+- Анимированный count-up счётчик (easeOutCubic, staggered, правильная русская плюрализация)
+- Mood polling каждые 30 секунд + относительное время на русском
+- Polaroid-стиль превью фото с наклоном
+- Staggered reveal анимации (приветствие → счётчик → настроение → карточки)
+- Код-ревью: 3 критических + 6 средних багов найдено и исправлено
+
+**Исправленные баги (по результатам ревью):**
+1. Memory leak: interval в setTimeout не очищался (RelationshipCounter)
+2. Безопасность: API /api/mood не проверял что запрашиваемый ID — действительно партнёр
+3. Типы: Date→string сериализация для server→client передачи
+4. Валидация: setMood не проверял длину входных данных
+5. Redis: отсутствие try/catch приводило к краху при недоступности Redis
+6. CSS: невалидный gap-[-8px] в PhotoPreviewCard
+7. Плюрализация: метки считались от финального значения, а не анимированного
+8. Cleanup: setTimeout в EmojiPicker не очищался при unmount
+9. Скоуп: запрос фото не фильтровался по паре
+
+**Новые файлы:**
+```
+src/actions/dashboard.ts                          # Server Actions дашборда
+src/app/api/mood/route.ts                         # API polling настроения
+src/components/dashboard/RelationshipCounter.tsx   # Счётчик отношений (animated)
+src/components/dashboard/MoodSection.tsx           # Настроение партнёра + своё
+src/components/dashboard/EmojiPicker.tsx           # Выбор настроения (6 пресетов)
+src/components/dashboard/UnreadNotesCard.tsx       # Карточка непрочитанных записок
+src/components/dashboard/PhotoPreviewCard.tsx      # Превью последних фото
+src/app/(main)/page.tsx                           # Дашборд (обновлён из placeholder)
 ```
