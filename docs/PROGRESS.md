@@ -102,14 +102,18 @@
 ---
 
 ### Фаза 6: Плейлист (Музыка)
-**Статус:** ⬜ Не начата
+**Статус:** ✅ Завершена
 
 | Задача | Статус | Заметки |
 |--------|--------|---------|
-| Список песен с комментариями | ⬜ | |
-| Добавление песни (title, artist, URL, comment) | ⬜ | |
-| Ссылки на Spotify/YouTube | ⬜ | |
-| Подсчёт общего количества | ⬜ | |
+| Server Actions (getPlaylistItems, createPlaylistItem, deletePlaylistItem) | ✅ | Auth + couple + ownership проверки, валидация URL протокола (http/https) |
+| Список песен с комментариями | ✅ | SongCard: paper-texture, music icon gold, комментарий Caveat rose, relative time на русском |
+| Добавление песни (title, artist, URL, comment) | ✅ | AddSongModal: паттерн NoteComposer, 4 поля, валидация длины, Escape/overlay close |
+| Ссылки на Spotify/YouTube (optional) | ✅ | ExternalLink иконка, target=_blank, noopener noreferrer, aria-label |
+| Подсчёт общего количества | ✅ | Русская плюрализация (песня/песни/песен), скрыт при 0 |
+| Удаление трека (только автор) | ✅ | Trash2 иконка, ownership проверка на сервере, aria-label |
+| Staggered анимация карточек | ✅ | songCardSlide keyframes, 60ms delay per card |
+| Код-ревью + билд | ✅ | 1 critical (XSS javascript: URL) + 2 medium (aria-labels) — все исправлены, npm run build проходит |
 
 ---
 
@@ -332,4 +336,32 @@ src/components/notes/NoteView.tsx                 # Letter-style просмот�
 src/components/notes/NotesList.tsx                # Список записок с табами
 src/app/(main)/notes/page.tsx                     # Страница записок (обновлена из placeholder)
 src/app/globals.css                               # Notes CSS additions (.note-card-enter, .badge-unread)
+```
+
+### Сессия 5 — 2026-02-13
+**Цель:** Фаза 6 — Плейлист (Музыка)
+**Что сделано:**
+- Реализована полная функциональность плейлиста: добавление, просмотр, удаление треков с комментариями
+- Server actions: getPlaylistItems (список + счётчик), createPlaylistItem (с валидацией), deletePlaylistItem (ownership check)
+- SongCard: карточка трека с music icon gold, title, artist, комментарий Caveat rose в кавычках, относительное время на русском, внешняя ссылка, кнопка удаления (только автор)
+- AddSongModal: 4 поля (название, исполнитель, ссылка, комментарий), паттерн NoteComposer (Escape, overlay close, body scroll lock, loading protection)
+- PlaylistView: заголовок + кнопка "Добавить", счётчик с русской плюрализацией, staggered songCardSlide анимация, empty state
+- CSS: keyframes songCardSlide + .song-card-enter
+- Реализация через agent teams (2 разработчика + 1 ревьюер) — 7 задач с зависимостями
+- Код-ревью: 1 critical + 2 medium — все исправлены
+
+**Исправленные баги (по результатам ревью):**
+1. XSS: валидация протокола URL (javascript: → разрешены только http/https) в createPlaylistItem
+2. Accessibility: добавлен aria-label="Открыть {title}" на внешнюю ссылку SongCard
+3. Accessibility: добавлен aria-label="Удалить трек" на кнопку удаления SongCard
+
+**Новые файлы:**
+```
+src/actions/playlist.ts                           # Server Actions плейлиста
+src/components/playlist/SongCard.tsx               # Карточка трека
+src/components/playlist/AddSongModal.tsx           # Модал добавления трека
+src/components/playlist/PlaylistView.tsx           # Основной клиент-компонент плейлиста
+src/app/(main)/playlist/page.tsx                  # Страница плейлиста (обновлена из placeholder)
+src/app/globals.css                               # Playlist CSS additions (.song-card-enter)
+docs/plans/2026-02-13-playlist-phase6.md          # План реализации фазы 6
 ```
