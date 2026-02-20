@@ -1,0 +1,71 @@
+/* Our Space - Noir Rose Design System */
+
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400;1,6..96,500&family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@theme {
+  /* === Noir Rose Color System === */
+  
+  /* Backgrounds */
+  --color-background: rgb(15 10 13);      /* #0f0a0d - very dark warm */
+  --color-surface: rgb(26 18 21);         /* #1a1215 - slightly lighter */
+  --color-elevated: rgb(34 26 29);        /* #221a1d - elevated surfaces */
+  
+  /* Text */
+  --color-foreground: rgb(245 232 236);   /* #f5e8ec - light pinkish */
+  --color-text-secondary: rgb(201 168 176); /* #c9a8b0 - muted rose */
+  --color-text-muted: rgb(154 125 133);     /* #9a7d85 - very muted */
+  
+  /* Accents */
+  --color-accent: rgb(232 93 117);        /* #e85d75 - muted rose (main accent) */
+  --color-accent-warm: rgb(255 107 136);  /* #ff6b88 - brighter rose for hover */
+  
+  /* Borders */
+  --color-border: rgb(42 31 35);          /* #2a1f23 - dark warm border */
+  
+  /* Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  
+  /* Font families */
+  --font-display: 'Bodoni Moda', Georgia, serif;
+  --font-body: 'Lato', system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer utilities {
+  .glow-rose {
+    box-shadow: 0 0 30px rgba(232, 93, 117, 0.3);
+  }
+  
+  .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+  
+  .font-display {
+    font-family: var(--font-display);
+  }
+  
+  .font-body {
+    font-family: var(--font-body);
+  }
+}
