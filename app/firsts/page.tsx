@@ -1,6 +1,8 @@
 import { db } from "@/lib/db";
 import { firsts } from "@/lib/schema";
 import { asc } from "drizzle-orm";
+import AppShell from "@/components/layout/AppShell";
+import { getRelationshipText } from "@/lib/utils";
 
 export default async function FirstsPage() {
   // Fetch all "first times"
@@ -9,19 +11,12 @@ export default async function FirstsPage() {
     .from(firsts)
     .orderBy(asc(firsts.sortOrder), asc(firsts.createdAt));
 
-  return (
-    <div className="min-h-screen">
-      {/* Top bar */}
-      <div className="fixed top-0 left-0 right-0 bg-surface/80 backdrop-blur-md border-b border-border z-50">
-        <div className="container mx-auto px-4 py-4">
-          <h1 className="font-display text-2xl text-center">
-            Первый раз когда...
-          </h1>
-        </div>
-      </div>
+  const startDate = new Date(process.env.RELATIONSHIP_START_DATE || "2024-08-25");
+  const daysText = getRelationshipText(startDate);
 
-      {/* Content */}
-      <div className="pt-24 container mx-auto px-4 max-w-4xl pb-20">
+  return (
+    <AppShell daysText={daysText}>
+      <div className="container mx-auto px-4 max-w-4xl py-8">
         {/* Add button */}
         <div className="flex justify-end mb-12">
           <button className="px-6 py-3 bg-accent text-background rounded-lg hover:bg-accent-warm transition-smooth">
@@ -76,6 +71,6 @@ export default async function FirstsPage() {
         {/* Bottom spacing for better scroll */}
         <div className="h-24" />
       </div>
-    </div>
+    </AppShell>
   );
 }

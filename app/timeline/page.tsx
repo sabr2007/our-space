@@ -2,6 +2,9 @@ import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { events } from "@/lib/schema";
 import { desc } from "drizzle-orm";
+import AppShell from "@/components/layout/AppShell";
+import DayCounter from "@/components/layout/DayCounter";
+import { getRelationshipText } from "@/lib/utils";
 
 export default async function TimelinePage() {
   const userId = await getCurrentUser();
@@ -16,36 +19,32 @@ export default async function TimelinePage() {
     .from(events)
     .orderBy(desc(events.date));
 
+  const startDate = new Date(process.env.RELATIONSHIP_START_DATE || "2024-08-25");
+  const daysText = getRelationshipText(startDate);
+
   return (
-    <div className="min-h-screen">
-      {/* Top bar */}
-      <div className="fixed top-0 left-0 right-0 bg-surface/80 backdrop-blur-md border-b border-border z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="font-display text-2xl text-foreground">Our Space</h1>
-          <div className="text-text-secondary text-sm">
-            {/* Days counter placeholder */}
-            547 дней вместе
-          </div>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="pt-24 container mx-auto px-4">
-        <h2 className="font-display text-4xl text-center mb-12">
+    <AppShell daysText={daysText}>
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="font-display text-4xl md:text-5xl text-center mb-12">
           Наше путешествие
-        </h2>
+        </h1>
 
-        {/* Timeline placeholder */}
+        {/* Timeline placeholder - will add GSAP horizontal scroll later */}
         <div className="space-y-8">
           {allEvents.length === 0 ? (
-            <p className="text-center text-text-muted">
-              No events yet. Start adding your memories!
-            </p>
+            <div className="text-center py-12">
+              <p className="text-text-muted mb-4">
+                Ещё нет событий. Начните добавлять ваши воспоминания!
+              </p>
+              <button className="px-6 py-3 bg-accent text-background rounded-lg hover:bg-accent-warm transition-smooth">
+                + Добавить событие
+              </button>
+            </div>
           ) : (
             allEvents.map((event) => (
               <div
                 key={event.id}
-                className="bg-surface border border-border rounded-lg p-6"
+                className="bg-surface border border-border rounded-lg p-6 hover:border-accent transition-smooth"
               >
                 <div className="text-sm text-text-muted mb-2">{event.date}</div>
                 <h3 className="font-display text-2xl mb-2">{event.title}</h3>
@@ -57,6 +56,6 @@ export default async function TimelinePage() {
           )}
         </div>
       </div>
-    </div>
+    </AppShell>
   );
 }

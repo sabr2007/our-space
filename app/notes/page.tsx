@@ -2,6 +2,8 @@ import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { notes, users } from "@/lib/schema";
 import { desc, eq, or, and } from "drizzle-orm";
+import AppShell from "@/components/layout/AppShell";
+import { getRelationshipText } from "@/lib/utils";
 
 export default async function NotesPage() {
   const userId = await getCurrentUser();
@@ -34,17 +36,12 @@ export default async function NotesPage() {
   const receivedNotes = allNotes.filter((n) => n.note.authorId === partnerId);
   const unreadCount = receivedNotes.filter((n) => !n.note.isRead).length;
 
-  return (
-    <div className="min-h-screen">
-      {/* Top bar */}
-      <div className="fixed top-0 left-0 right-0 bg-surface/80 backdrop-blur-md border-b border-border z-50">
-        <div className="container mx-auto px-4 py-4">
-          <h1 className="font-display text-2xl text-center">Записки</h1>
-        </div>
-      </div>
+  const startDate = new Date(process.env.RELATIONSHIP_START_DATE || "2024-08-25");
+  const daysText = getRelationshipText(startDate);
 
-      {/* Content */}
-      <div className="pt-24 container mx-auto px-4 max-w-4xl pb-20">
+  return (
+    <AppShell daysText={daysText}>
+      <div className="container mx-auto px-4 max-w-4xl py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
             {unreadCount > 0 && (
@@ -105,6 +102,6 @@ export default async function NotesPage() {
           )}
         </div>
       </div>
-    </div>
+    </AppShell>
   );
 }
