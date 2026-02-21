@@ -5,7 +5,7 @@ import { jwtVerify } from "jose";
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);
 const COOKIE_NAME = "our-space-auth";
 
-const PUBLIC_ROUTES = ["/login"];
+const PUBLIC_ROUTES = ["/login", "/api/auth/login"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
