@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyKey, setAuthCookie } from "@/lib/auth";
+import { SignJWT } from "jose";
+
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);
+const COOKIE_NAME = "our-space-auth";
+const COOKIE_MAX_AGE = 90 * 24 * 60 * 60;
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,7 +16,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const userId = await verifyKey(key);
+    // Verify key
+    let userId: number | null = null;
+    if (key === process.env.SECRET_KEY_1) userId = 1;
+    else if (key === process.env.SECRET_KEY_2) userId = 2;
 
     if (!userId) {
       return NextResponse.json(
@@ -21,10 +28,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Set auth cookie
-    await setAuthCookie(userId);
+    // Create JWT
+    const token = await new SignJWT({ userId })
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime("90d")
+      .sign(JWT_SECRET);
 
-    return NextResponse.json({ success: true, userId });
+    // Set cookie via NextResponse
+    const response = NextResponse.json({ success: true, userId });
+    response.cookies.set(COOKIE_NAME, token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: COOKIE_MAX_AGE,
+      path: "/",
+    });
+
+    return response;
   } catch (error) {
     console.error("Login error:", error);
     return NextResponse.json(
